@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jbi xmlns="http://java.sun.com/xml/ns/jbi" version="1.0">
+	<service-assembly>
+	
+		<identification>
+			<name>AIBP Final Projec SA</name>
+			<description>Abdul Meque Project phase one</description>
+		</identification>
+		
+		<service-unit>
+			<identification>
+				<name>finalproject-cxfbc-SU</name>
+				<description>...</description>
+			</identification>
+			<target>
+				<artifacts-zip>final-cxfbc-su.zip</artifacts-zip>
+				<component-name>servicemix-cxf-bc</component-name>
+			</target>
+		</service-unit>
+		
+		<service-unit>
+			<identification>
+				<name>finalproject-cxfse-SU</name>
+				<description>...</description>
+			</identification>
+			<target>
+				<artifacts-zip>final-cxfse-su.zip</artifacts-zip>
+				<component-name>servicemix-cxf-se</component-name>
+			</target>
+		</service-unit>
+		
+	</service-assembly>
+</jbi>
+

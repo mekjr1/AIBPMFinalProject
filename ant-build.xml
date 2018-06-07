@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+
+<project name="AIBPM FINAL PROJECT" basedir="." default="all">
+
+	<property name="servicemix.installation.dir" location="C:\apache-servicemix-4.3.1-fuse-03-01" />
+	<property name="servicemix.hotdeploy.dir" location="${servicemix.installation.dir}/deploy" />
+
+	<property name="prj.dir" location="." />
+	<property name="src.dir" location="${prj.dir}/src" />
+	<property name="classes.dir" location="${prj.dir}/bin" />
+	<property name="build.dir" location="${prj.dir}/build" />
+	<property name="tmp.dir" location="${build.dir}/tmp" />
+	<property name="test.dir" location="${prj.dir}/test" />
+
+
+	<!--Variable declaration for the folder names-->
+	<property name="file-su.dir" value="${prj.dir}/file-copy" />
+	<property name="file-su-lib.dir" value="${prj.dir}/file-copy/lib" />
+	<property name="eip-su.dir" value="${prj.dir}/routing" />
+	<property name="cxfbc-su.dir" value="${prj.dir}/cxf-bc" />
+	<property name="cxfse-su.dir" value="${prj.dir}/cxf-se" />
+	<property name="http-su.dir" value="${prj.dir}/http" />
+	<property name="bean-su.dir" value="${prj.dir}/bean" />
+	<property name="transf-su.dir" value="${prj.dir}/transformer" />
+
+	<!--Variable declaration for the Archive names-->
+	<property name="su-file-archive" value="final-file-su.zip" />
+	<property name="su-eip-archive" value="final-eip-su.zip" />
+	<property name="su-trasnf-archive" value="final-saxon-su.zip" />
+	<property name="su-cxfbc-archive" value="final-cxfbc-su.zip" />
+	<property name="su-cxfse-archive" value="final-cxfse-su.zip" />
+	<property name="su-bean-archive" value="final-bean-su.zip" />
+	<property name="su-http-archive" value="final-http-su.zip" />
+	<property name="sa-archive" value="AIBPM_FinalProject-SA.zip" />
+	
+
+	<!-- package and deploy SA -->
+	<target name="all" depends="init">
+		<antcall target="package-cxfbc-su" >
+			<param name="cxf-proxy-file" value="cxf.xml" />
+		</antcall>
+		<antcall target="package-cxfse-su" />
+		<antcall target="package-sa" />
+		<antcall target="deploy-sa" />
+	</target>
+
+
+	<!-- clean -->
+	<target name="clear">
+		<delete dir="${servicemix.installation.dir}/samples" />
+	</target>
+
+	<!-- package and deploy SUs -->
+	<!--
+	          package the SU  containing xbean.xml and WSDL file 
+	          for consuming TheValidator sevice required parametes:
+	          descriptor-dir: directory containing xbean.xml file
+	          destination-su-file: name of archive to be created
+	     -->
+	<target name="package-cxfbc-su">
+		<jar destfile="${build.dir}/${su-cxfbc-archive}">
+			<fileset dir="${cxfbc-su.dir}">
+				<include name="xbean.xml" />
+				<include name="*.wsdl" />
+			</fileset>
+		</jar>
+	</target>
+
+	<!--
+	          packate a SU containing the xbean.xml that exposes an 
+	          endpoint for an anotated pojo and other resources(classe and others), 
+	          (hosting a ws in  servicemix) required parametes:
+     		  descriptor-dir: where the xml is located
+     		  resource-dir: where the resources are located
+     		  classes.dir: the folder where the class files are located
+     		  destination-su-file: SU archive name
+	     -->
+	<target name="package-cxfse-su">
+		<jar destfile="${build.dir}/${su-cxfse-archive}">
+			<fileset dir="${cxfse-su.dir}">
+				<include name="*.xml" />
+			</fileset>
+			<fileset dir="${classes.dir}">
+				<include name="**/*" />
+			</fileset>
+		</jar>
+	</target>
+
+	<!-- packate a SU containing xbean.xml and other resources (classes and other files)
+     required parametes:
+     descriptor-dir: 
+     resource-dir: 
+     classes.dir: 
+     destination-su-file: 
+      -->
+
+	<target name="package-eip-su">
+		<jar destfile="${build.dir}/${su-eip-archive}">
+			<fileset dir="${eip-su.dir}">
+				<include name="xbean.xml" />
+			</fileset>
+		</jar>
+	</target>
+
+	<!-- package SA archive 
+     required parameters:
+     sa-archive: name of the archive to be created
+     descriptor-dir: directory containing jbi.xml file
+     su-archives: SU to be packaged in the SA
+     -->
+	<target name="package-sa">
+		<delete dir="${tmp.dir}" />
+		<mkdir dir="${tmp.dir}" />
+		<mkdir dir="${tmp.dir}/META-INF" />
+		<copy file="${prj.dir}/jbi.xml" tofile="${tmp.dir}/META-INF/jbi.xml" />
+		<jar destfile="${build.dir}/${sa-archive}">
+			<fileset dir="${tmp.dir}">
+				<include name="META-INF/**" />
+			</fileset>
+			<fileset dir="${build.dir}">
+				<include name="final-*-su.zip" />
+			</fileset>
+		</jar>
+	</target>
+
+	<!-- deploy SA: copy SA archive in servicemix hotdeploy directory -->
+	<target name="deploy-sa">
+		<copy file="${build.dir}/${sa-archive}" tofile="${servicemix.hotdeploy.dir}/${sa-archive}" overwrite="true" />
+	</target>
+
+	<target name="undeploy-sa">
+		<delete file="${servicemix.hotdeploy.dir}/${sa-archive}" />
+	</target>
+
+
+	<target name="init">
+		<delete dir="${build.dir}" />
+		<mkdir dir="${build.dir}" />
+	</target>
+</project>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans 	xmlns="http://xbean.org/schemas/spring/1.0"
+		xmlns:cxf-se="http://servicemix.apache.org/cxfse/1.0" 
+		xmlns:tns="http://egov/aibpm/finalProject/">
+
+	<classpath>
+		<location>.</location>
+	</classpath>
+	
+	<cxf-se:endpoint>
+		<cxf-se:pojo>
+			<bean class="it.unitn.master.egov.aibpm.ws.TheValidatorImpl">
+			</bean>
+			<bean class="it.unitn.master.egov.aibpm.ws.NameToIPImpl">
+			</bean>
+		</cxf-se:pojo>
+	</cxf-se:endpoint>
+
+</beans>

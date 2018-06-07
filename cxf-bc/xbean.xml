@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://xbean.org/schemas/spring/1.0" xmlns:cxf-bc="http://servicemix.apache.org/cxfbc/1.0"
+	xmlns:tns="http://egov/aibpm/finalproject/">
+
+	<classpath>
+		<location>.</location>
+	</classpath>
+
+	<cxf-bc:consumer 
+		wsdl="classpath:TheValidatorService.wsdl"
+		service="tns:TheValidator" interfaceName="tns:TheValidatorService"
+		targetService="tns:TheValidator" targetEndpoint="tns:TheValidatorPort"
+		targetInterface="tns:TheValidatorService" />
+		
+	<cxf-bc:consumer 
+		wsdl="classpath:NameToIPConverter.wsdl"
+		service="tns:NameToIPConverter" interfaceName="tns:NameToIP"
+		targetService="tns:NameToIPConverter" targetEndpoint="tns:NameToIPConverterPort"
+		targetInterface="tns:NameToIP" />
+
+</beans>
